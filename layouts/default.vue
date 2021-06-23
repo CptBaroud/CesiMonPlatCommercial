@@ -148,9 +148,14 @@ export default {
           icon: 'mdi-home-outline',
           title: 'Accueil',
           to: '/'
+        },
+        {
+          icon: 'mdi-account-group',
+          title: 'Clients',
+          to: '/showUser'
         }
       ],
-      miniVariant: true,
+      miniVariant: true
     }
   },
   computed: {
