@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import UserTable from '../components/userTable.vue'
 
 export default {
@@ -34,9 +35,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('user/fetch', {
-      token: this.$auth.getToken('local')
-    })
+    this.$store.dispatch('user/fetch', this.$auth.getToken('local'))
   }
 }
 
