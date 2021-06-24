@@ -1,15 +1,43 @@
 <template>
-  <user-table>
-  </user-table>
+  <v-data-iterator
+    :items="users"
+    no-data-text="Aucun utilisateurs pour l'instant"
+  >
+    <template #default="{items}">
+      <v-row>
+        <v-col
+          v-for="item in items"
+          :key="item._id"
+          cols="4"
+        >
+          <UserTable
+            :item="item"
+          />
+        </v-col>
+      </v-row>
+    </template>
+  </v-data-iterator>
 </template>
 
 <script>
-import userTable from '../components/userTable.vue'
+import UserTable from '../components/userTable.vue'
 
 export default {
   components: {
-    // eslint-disable-next-line vue/no-unused-components
-    userTable
+    UserTable
+  },
+  computed: {
+    users: {
+      get () {
+        return this.$store.getters['user/users']
+      }
+    }
+  },
+  mounted () {
+    this.$store.dispatch('user/fetch', {
+      token: this.$auth.getToken('local')
+    })
   }
 }
+
 </script>

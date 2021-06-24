@@ -1,8 +1,8 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - Delivery',
-    title: 'Delivery',
+    titleTemplate: '%s - Commercial',
+    title: 'Commercial',
     htmlAttrs: {
       lang: 'fr'
     },
@@ -81,7 +81,7 @@ export default {
     strategies: {
       local: {
         endpoints: {
-          login: { url: '/auth/?origin=delivery', method: 'post', propertyName: 'token' },
+          login: { url: '/auth/?origin=com', method: 'post', propertyName: 'token' },
           logout: { url: '/auth/', method: 'delete' },
           user: { url: '/users/getUser', method: 'get', propertyName: 'user' }
         },

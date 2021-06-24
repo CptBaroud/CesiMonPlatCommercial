@@ -165,8 +165,6 @@ export default {
       }
     }
   },
-  mounted () {
-  },
   methods: {
     switchTheme () {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
