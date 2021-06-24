@@ -1,5 +1,5 @@
 export default {
-  notification (state) {
-    return state.notification
+  deliveries (state) {
+    return state.deliveries
   }
 }

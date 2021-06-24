@@ -65,73 +65,71 @@
           mdi-brightness-4
         </v-icon>
       </v-btn>
-      <template class="d-block justify-end align-end">
-        <v-menu open-on-hover bottom offset-y max-height="300">
-          <template #activator="{ on, attrs }">
-            <v-badge
-              :content="2"
-              style="border-color: var(v--background-color)"
-              :value="2"
-              class="mr-4"
-              color="green"
-              bordered
-              overlap
+      <v-menu open-on-hover bottom offset-y max-height="300">
+        <template #activator="{ on, attrs }">
+          <v-badge
+            :content="2"
+            style="border-color: var(v--background-color)"
+            :value="2"
+            class="mr-4"
+            color="green"
+            bordered
+            overlap
+          >
+            <v-icon
+              v-bind="attrs"
+              v-on="on"
             >
-              <v-icon
-                v-bind="attrs"
-                v-on="on"
-              >
-                mdi-bell
-              </v-icon>
-            </v-badge>
-          </template>
-          <!--<v-list rounded color="secondary" max-width="375">
-              <template v-for="(item, a) in notification">
-                <notification
-                  :key="a"
-                  :notification="item"
-                />
-              </template>
-              <v-list-item to="/notifications" class="d-flex justify-center">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    En voir plus
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>!-->
-        </v-menu>
-        <v-list color="background" dense rounded class="mr-8">
-          <v-menu open-on-hover bottom offset-y>
-            <template #activator="{ on, attrs }">
-              <v-list-item
-                v-bind="attrs"
-                v-on="on"
-                v-if="$auth.user"
-              >
-                <v-list-item-avatar style="border: solid var(--v-primary-base) 2px">
-                  <v-img :src="$auth.user.avatar" />
-                </v-list-item-avatar>
-                <v-list-item-title v-if="on">
-                  <h3>{{ $auth.user.firstName }}</h3>
-                </v-list-item-title>
-              </v-list-item>
+              mdi-bell
+            </v-icon>
+          </v-badge>
+        </template>
+        <!--<v-list rounded color="secondary" max-width="375">
+            <template v-for="(item, a) in notification">
+              <notification
+                :key="a"
+                :notification="item"
+              />
             </template>
-            <v-list rounded color="background">
-              <v-list-item
-                disabled
-              >
-                <v-list-item-title>Mon compte</v-list-item-title>
-              </v-list-item>
-              <v-list-item
-                @click="$auth.logout()"
-              >
-                <v-list-item-title>Deconnexion</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-list>
-      </template>
+            <v-list-item to="/notifications" class="d-flex justify-center">
+              <v-list-item-content>
+                <v-list-item-title>
+                  En voir plus
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>!-->
+      </v-menu>
+      <v-list color="background" dense rounded class="mr-8">
+        <v-menu open-on-hover bottom offset-y>
+          <template #activator="{ on, attrs }">
+            <v-list-item
+              v-if="$auth.user"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-list-item-avatar style="border: solid var(--v-primary-base) 2px">
+                <v-img :src="$auth.user.avatar" />
+              </v-list-item-avatar>
+              <v-list-item-title v-if="on">
+                <h3>{{ $auth.user.firstName }}</h3>
+              </v-list-item-title>
+            </v-list-item>
+          </template>
+          <v-list rounded color="background">
+            <v-list-item
+              disabled
+            >
+              <v-list-item-title>Mon compte</v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              @click="$auth.logout()"
+            >
+              <v-list-item-title>Deconnexion</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-list>
     </v-app-bar>
   </v-app>
 </template>
@@ -150,9 +148,9 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-account-group',
-          title: 'Clients',
-          to: '/showUser'
+          icon: 'mdi-graph-outline',
+          title: 'Stats',
+          to: '/Stats'
         }
       ],
       miniVariant: true
@@ -164,6 +162,17 @@ export default {
         return this.$store.getters['order/order']
       }
     }
+  },
+  mounted () {
+    this.socket = this.$nuxtSocket({
+      name: 'order'
+    })
+
+    this.socket.on('order', (data) => {
+      if (data.refresh) {
+        this.$store.dispatch('order/fetch', this.$auth.getToken('local'))
+      }
+    })
   },
   methods: {
     switchTheme () {

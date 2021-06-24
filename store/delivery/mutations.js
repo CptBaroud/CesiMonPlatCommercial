@@ -1,5 +1,5 @@
 export default {
-  setNotification (state, data) {
-    state.notification = data
+  setDeliveries (state, data) {
+    state.deliveries = data
   }
 }

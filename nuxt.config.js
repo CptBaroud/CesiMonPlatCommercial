@@ -66,7 +66,7 @@ export default {
     // module options
     sockets: [
       {
-        name: 'main',
+        name: 'order',
         url: 'http://localhost:3000/',
         default: true
       }
