@@ -62,7 +62,7 @@ export default {
         },
         {
           text: 'Restaurant',
-          value: 'restaurant'
+          value: 'restaurant.name'
         },
         {
           text: 'Adresse',

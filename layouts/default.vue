@@ -84,21 +84,6 @@
             </v-icon>
           </v-badge>
         </template>
-        <!--<v-list rounded color="secondary" max-width="375">
-            <template v-for="(item, a) in notification">
-              <notification
-                :key="a"
-                :notification="item"
-              />
-            </template>
-            <v-list-item to="/notifications" class="d-flex justify-center">
-              <v-list-item-content>
-                <v-list-item-title>
-                  En voir plus
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>!-->
       </v-menu>
       <v-list color="background" dense rounded class="mr-8">
         <v-menu open-on-hover bottom offset-y>
@@ -143,34 +128,38 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-home-outline',
-          title: 'Accueil',
+          icon: 'mdi-food',
+          title: 'Order',
           to: '/'
         },
         {
           icon: 'mdi-graph-outline',
           title: 'Stats',
           to: '/Stats'
+        },
+        {
+          icon: 'mdi-truck-delivery',
+          title: 'Deliveries',
+          to: '/deliveries'
         }
       ],
       miniVariant: true
     }
   },
-  computed: {
-    order: {
-      get () {
-        return this.$store.getters['order/order']
-      }
-    }
-  },
   mounted () {
     this.socket = this.$nuxtSocket({
-      name: 'order'
+      name: 'main'
     })
 
     this.socket.on('order', (data) => {
-      if (data.refresh) {
+      if (data.update) {
         this.$store.dispatch('order/fetch', this.$auth.getToken('local'))
+      }
+    })
+
+    this.socket.on('delivery', (data) => {
+      if (data.update) {
+        this.$store.dispatch('delivery/fetch', this.$auth.getToken('local'))
       }
     })
   },

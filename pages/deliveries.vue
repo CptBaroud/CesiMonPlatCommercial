@@ -11,9 +11,9 @@
           max-height="500"
         >
           <v-card-title>
-            Commandes en cours d'acceptation
+            Livraisons acceptées
           </v-card-title>
-          <order-table :item="orderNotAccepted" />
+          <deliveries-table :item="deliveriesNotDone" />
         </v-card>
       </v-col>
       <v-col col="6">
@@ -24,9 +24,9 @@
           max-height="500"
         >
           <v-card-title>
-            Commandes acceptées
+            Livraisons finies
           </v-card-title>
-          <order-table :item="orderAccepted" />
+          <deliveries-table :item="deliveriesDone" />
         </v-card>
       </v-col>
     </v-row>
@@ -34,24 +34,27 @@
 </template>
 
 <script>
-import orderTable from '../components/orderTable.vue'
+import deliveriesTable from '../components/deliveriesTable.vue'
 
 export default {
+  name: 'Deliveries',
   components: {
-    orderTable
+    deliveriesTable
   },
   computed: {
-    orderAccepted () {
-      return this.$store.getters['order/allOrder'].filter(object => object.status === 'accepted')
+    deliveriesDone () {
+      return this.$store.getters['delivery/deliveries'].filter(object => object.status === true)
     },
-    orderNotAccepted () {
-      return this.$store.getters['order/allOrder'].filter(object => object.status !== 'accepted')
+    deliveriesNotDone () {
+      return this.$store.getters['delivery/deliveries'].filter(object => object.done === false)
     }
   },
   mounted () {
-    this.$store.dispatch('order/fetch', this.$auth.getToken('local'))
-
     this.$store.dispatch('delivery/fetch', this.$auth.getToken('local'))
   }
 }
 </script>
+
+<style scoped>
+
+</style>
