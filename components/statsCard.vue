@@ -6,18 +6,14 @@
     :color="light ? color : color + ' darken-2'"
   >
     <v-card-title>
+      <v-spacer />
       <v-icon>
         {{ icon }}
       </v-icon>
-      <v-spacer />
-      <v-icon x-small class="mr-2">
-        mdi-chart-pie
-      </v-icon>
-      {{ evolution }}%
     </v-card-title>
     <v-card-text style="color: var(--v-text-base)">
       <span :class="subtitle === null ? 'text-h2 font-weight-normal' : 'text-h3 font-weight-normal'">
-        {{ value }} €
+        {{ value }} <span v-show="price">€</span>
       </span>
       <br>
       <span class="text-subtitle-1 font-weight-light">
@@ -37,6 +33,11 @@ export default {
       required: false
     },
     light: {
+      type: Boolean,
+      default: true,
+      required: false
+    },
+    price: {
       type: Boolean,
       default: true,
       required: false

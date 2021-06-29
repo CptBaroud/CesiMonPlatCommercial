@@ -3,6 +3,7 @@
     rounded="xl"
     flat
     class="mt-4"
+    color="secondary"
   >
     <v-card-title>
       <v-text-field
@@ -21,7 +22,54 @@
         :items="item"
         :headers="headers"
         :search="search"
-      />
+        :page="page"
+        :items-per-page="itemPerPages"
+        hide-default-footer
+        no-data-text="Aucune données disponibles"
+        no-results-text="Aucune données ne correspond a votre recherche"
+      >
+        <template #[`item.end`]="{item}">
+          {{ new Date(item.end).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit'
+          }) }}
+        </template>
+        <template #[`item.status`]="{item}">
+          <v-chip
+            :color="statusColor(item)"
+          >
+            {{ statusText(item.status) }}
+          </v-chip>
+        </template>
+        <template #[`item.deliveryTime`]="{item}">
+          {{ new Date(item.deliveryTime).toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          }) }}
+        </template>
+        <template #[`item.done`]="{item}">
+          <v-chip
+            :color="item.done ? 'success' : 'error'"
+          >
+            <span v-if="item.done">
+              Livré
+            </span>
+            <span v-else>
+              Non livré
+            </span>
+          </v-chip>
+        </template>
+        <template #footer>
+          <v-pagination
+            v-model="page"
+            class="mt-2"
+            :length="itemsLength"
+            :total-visible="3"
+            circle
+          />
+        </template>
+      </v-data-table>
     </v-card-text>
   </v-card>
 </template>
@@ -35,13 +83,16 @@ export default {
       type: Array,
       default () {
         return [{
-          deliveryMan: Number,
-          client: Number,
-          status: Number,
-          address: String,
+          deliveryMan: NaN,
+          client: NaN,
+          restaurant: {
+            name: ''
+          },
+          status: NaN,
+          address: '',
           deliveryTime: Date,
           end: Date,
-          done: Boolean,
+          done: false,
           order: []
         }]
       }
@@ -50,6 +101,8 @@ export default {
   data () {
     return {
       search: '',
+      page: 1,
+      itemPerPages: 10,
       headers: [
         {
           text: 'Livreur',
@@ -67,11 +120,7 @@ export default {
         },
         {
           text: 'Restaurant',
-          value: 'restaurant'
-        },
-        {
-          text: 'Accepté',
-          value: 'accepted'
+          value: 'restaurant.name'
         },
         {
           text: 'Adresse',
@@ -82,10 +131,50 @@ export default {
           value: 'deliveryTime'
         },
         {
+          text: 'Livré le',
+          value: 'end'
+        },
+        {
           text: 'Terminé',
           value: 'done'
         }
       ]
+    }
+  },
+  computed: {
+    itemsLength () {
+      return Math.ceil(this.item.length / this.itemPerPages)
+    }
+  },
+  methods: {
+    statusColor (item) {
+      switch (item) {
+        case 0:
+          return 'accent'
+        case 1:
+          return 'warning'
+        case 3:
+          return 'info'
+        case 5:
+          return 'success'
+        default:
+          return 'primary'
+      }
+    },
+
+    statusText (item) {
+      switch (item) {
+        case 0:
+          return 'En attente'
+        case 1:
+          return 'En préparation'
+        case 3:
+          return 'En livraison'
+        case 5:
+          return 'Livrée'
+        default:
+          return 'Indéfinis'
+      }
     }
   }
 }
@@ -93,11 +182,7 @@ export default {
 </script>
 
 <style scoped>
->>> .theme--dark .v-data-table {
-  background-color: var(--v-secondary-base) !important;
-}
-
->>> .theme--light .v-data-table {
+>>> .v-data-table {
   background: var(--v-secondary-base) !important;
 }
 

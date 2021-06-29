@@ -3,6 +3,7 @@
     rounded="xl"
     flat
     class="mt-4"
+    color="secondary"
   >
     <v-card-title>
       <v-text-field
@@ -21,7 +22,44 @@
         :items="item"
         :headers="headers"
         :search="search"
-      />
+        :page="page"
+        :items-per-page="itemPerPages"
+        hide-default-footer
+        no-data-text="Aucune données disponibles"
+        no-results-text="Aucune données ne correspond a votre recherche"
+      >
+        <template #[`item.status`]="{item}">
+          <v-chip :color="statusColor(item.status)">
+            {{ statusText(item.status) }}
+          </v-chip>
+        </template>
+        <template #[`item.price`]="{item}">
+          {{ item.price }} <span style="color: var(--v-primary-base)">€</span>
+        </template>
+        <template #[`item.created`]="{item}">
+          {{ new Date(item.created).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit'
+          }) }}
+        </template>
+        <template #[`item.items`]="{item}">
+          <v-chip-group column>
+            <v-chip v-for="(object, i) in item.items" :key="i">
+              {{ object.name }} <span class="ml-1" style="color: var(--v-primary-base);"> x </span>{{ object.quantity }}
+            </v-chip>
+          </v-chip-group>
+        </template>
+        <template #footer>
+          <v-pagination
+            v-model="page"
+            class="mt-2"
+            :length="itemsLength"
+            :total-visible="3"
+            circle
+          />
+        </template>
+      </v-data-table>
     </v-card-text>
   </v-card>
 </template>
@@ -49,6 +87,9 @@ export default {
   data () {
     return {
       search: '',
+      page: 1,
+      itemPerPages: 10,
+      data: [],
       headers: [
         {
           text: 'Utilisateur',
@@ -57,7 +98,7 @@ export default {
           value: 'user'
         },
         {
-          text: 'Date de création',
+          text: 'Créer le',
           value: 'created'
         },
         {
@@ -65,26 +106,51 @@ export default {
           value: 'restaurant.name'
         },
         {
-          text: 'Adresse',
-          value: 'address'
+          text: 'Etat',
+          value: 'status'
         },
         {
-          text: 'Accepté',
-          value: 'accepted'
+          text: 'Articles',
+          value: 'items'
         },
         {
           text: 'Prix',
-          value: 'price'
-        },
-        {
-          text: 'Menu',
-          value: 'menu'
-        },
-        {
-          text: 'Article',
-          value: 'article'
+          value: 'price',
+          width: 100
         }
       ]
+    }
+  },
+  computed: {
+    itemsLength () {
+      return Math.ceil(this.item.length / this.itemPerPages)
+    }
+  },
+  methods: {
+    statusColor (item) {
+      switch (item) {
+        case 'pending':
+          return 'warning'
+        case 'accepted':
+          return 'success'
+        case 'declined':
+          return 'error'
+        default:
+          return 'primary'
+      }
+    },
+
+    statusText (item) {
+      switch (item) {
+        case 'pending':
+          return 'En attente'
+        case 'accepted':
+          return 'Acceptée'
+        case 'declined':
+          return 'Refusée'
+        default:
+          return 'Indéfinis'
+      }
     }
   }
 }
@@ -92,11 +158,7 @@ export default {
 </script>
 
 <style scoped>
->>> .theme--dark .v-data-table {
-  background-color: var(--v-secondary-base) !important;
-}
-
->>> .theme--light .v-data-table {
+>>> .v-data-table {
   background: var(--v-secondary-base) !important;
 }
 

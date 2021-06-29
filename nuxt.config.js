@@ -28,7 +28,7 @@ export default {
 
   server: {
     port: 8000, // par défaut: 3000,
-    host: '127.0.0.1'
+    host: '127.0.0.3'
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -37,6 +37,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/apexChart.client.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

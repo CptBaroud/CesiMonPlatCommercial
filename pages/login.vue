@@ -9,7 +9,7 @@
           color="background"
         >
           <v-card-title class="font-weight-bold text-h4">
-            Connexion
+            <img width="386" height="196" :src="logo" alt="Login">
           </v-card-title>
           <v-card-text>
             <v-form class="mt-12">
@@ -27,12 +27,6 @@
                 filled
                 label="Mot de passe"
               />
-              <v-spacer />
-              <v-radio
-                class="mt-4"
-                :ripple="false"
-                label="Rester connecté"
-              />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -43,12 +37,6 @@
               @click="login()"
             >
               Se connecter
-            </v-btn>
-            <v-btn
-              text
-              rounded
-            >
-              S'inscrire
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -64,6 +52,11 @@ export default {
     return {
       email: '',
       password: ''
+    }
+  },
+  computed: {
+    logo () {
+      return this.$vuetify.theme.dark ? 'http://localhost:3000/svg/logoTextCommercialDark.svg' : 'http://localhost:3000/svg/logoTextCommercialLight.svg'
     }
   },
   methods: {

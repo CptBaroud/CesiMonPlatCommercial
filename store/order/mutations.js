@@ -4,6 +4,30 @@ export default {
   },
 
   setAllOrder (state, data) {
+    // Pour chaque commandes
+    data.forEach((dataItem) => {
+      // On créer un tableau temporaire contenant les menu et les articles de la commande
+      const temp = dataItem.article.concat(dataItem.menu)
+      // On set un objet items qui va contenir les articles et les menu
+      dataItem.items = []
+      // Pour chacun de ces items
+      temp.forEach((article) => {
+        // On cherche l'emplacement de l'item dans le tableau général
+        const id = dataItem.items.findIndex((findIndex) => {
+          return findIndex._id === article._id
+        })
+
+        // Si on l'item existe deja on incrémente juste sa quantitée
+        if (id !== -1) {
+          dataItem.items[id].quantity++
+          // Sinon on l'insère dans le tableau items
+        } else {
+          // On initialise la quantitée à 1
+          article.quantity = 1
+          dataItem.items.push(article)
+        }
+      })
+    })
     state.allOrder = data
   },
 

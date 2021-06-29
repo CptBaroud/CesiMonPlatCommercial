@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="mt-2">
     <v-row
       class="mb-6"
     >
@@ -8,12 +8,24 @@
           rounded="xl"
           flat
           class="mt-4"
+          color="background"
           max-height="500"
         >
           <v-card-title>
-            Commandes en cours d'acceptation
+            Toutes les commandes
+            <v-spacer />
+            <v-btn
+              icon
+              color="primary"
+              nuxt
+              to="/order"
+            >
+              <v-icon>
+                mdi-arrow-right
+              </v-icon>
+            </v-btn>
           </v-card-title>
-          <order-table :item="orderNotAccepted" />
+          <order-table :item="order" />
         </v-card>
       </v-col>
       <v-col col="6">
@@ -21,12 +33,24 @@
           rounded="xl"
           flat
           class="mt-4"
+          color="background"
           max-height="500"
         >
           <v-card-title>
-            Commandes acceptées
+            Toutes les livraisons
+            <v-spacer />
+            <v-btn
+              icon
+              color="primary"
+              nuxt
+              to="/order"
+            >
+              <v-icon>
+                mdi-arrow-right
+              </v-icon>
+            </v-btn>
           </v-card-title>
-          <order-table :item="orderAccepted" />
+          <deliveriesTable :item="deliveries" />
         </v-card>
       </v-col>
     </v-row>
@@ -35,17 +59,24 @@
 
 <script>
 import orderTable from '../components/orderTable.vue'
+import deliveriesTable from '../components/deliveriesTable'
 
 export default {
   components: {
-    orderTable
+    orderTable,
+    deliveriesTable
   },
   computed: {
-    orderAccepted () {
-      return this.$store.getters['order/allOrder'].filter(object => object.status === 'accepted')
+    order: {
+      get () {
+        return this.$store.getters['order/allOrder']
+      }
     },
-    orderNotAccepted () {
-      return this.$store.getters['order/allOrder'].filter(object => object.status !== 'accepted')
+
+    deliveries: {
+      get () {
+        return this.$store.getters['delivery/deliveries']
+      }
     }
   },
   mounted () {
