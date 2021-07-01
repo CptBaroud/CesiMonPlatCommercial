@@ -194,6 +194,38 @@
                   </v-col>
                 </v-row>
               </div>
+
+              <div class="mb-8">
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>
+                      mdi-delete-outline
+                    </v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Supprimer
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Supprimer votre compte et les données vous concernant
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-row>
+                  <v-col cols="12">
+                    <v-spacer />
+                    <v-btn
+                      color="error"
+                      rounded
+                      x-large
+                      @click="deleteAccount()"
+                    >
+                      Supprimer
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </div>
             </v-list>
           </v-card-text>
         </v-card>
@@ -302,6 +334,18 @@ export default {
           file: response
         })
       })
+    },
+
+    deleteAccount () {
+      this.$store.dispatch('user/delete', {
+        token: this.$auth.getToken('local'),
+        user: this.$auth.user.id
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$auth.logout()
+          }
+        })
     },
 
     copyUrl () {

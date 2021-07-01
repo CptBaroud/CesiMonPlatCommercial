@@ -49,7 +49,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="3">
+      <!--<v-col cols="3">
         <v-card
           color="background"
           rounded="xl"
@@ -70,7 +70,7 @@
             </v-card>
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col>-->
     </v-row>
   </v-container>
 </template>
