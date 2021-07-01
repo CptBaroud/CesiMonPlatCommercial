@@ -5,7 +5,7 @@
         v-show="$auth.loggedIn"
         v-model="drawer"
         :mini-variant="miniVariant"
-        mini-variant-width="5em"
+        mini-variant-width="6em"
         fixed
         color="secondary"
         elevation="0"
@@ -68,9 +68,9 @@
         <v-menu open-on-hover bottom offset-y max-height="300">
           <template #activator="{ on, attrs }">
             <v-badge
-              :content="2"
+              :content="notification.length"
               style="border-color: var(v--background-color)"
-              :value="2"
+              :value="notification.length"
               class="mr-4"
               color="green"
               bordered
@@ -84,37 +84,54 @@
               </v-icon>
             </v-badge>
           </template>
+          <v-list rounded color="background" max-width="375">
+            <template v-for="(item, a) in notification">
+              <notification
+                :key="a"
+                :notification="item"
+              />
+            </template>
+            <v-list-item to="/notifications" class="d-flex justify-center">
+              <v-list-item-content>
+                <v-list-item-title>
+                  En voir plus
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-menu>
         <v-list color="background" dense rounded class="mr-8">
-          <v-menu open-on-hover bottom offset-y>
-            <template #activator="{ on, attrs }">
-              <v-list-item
-                v-if="$auth.user"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-list-item-avatar style="border: solid var(--v-primary-base) 2px">
-                  <v-img :src="$auth.user.avatar" />
-                </v-list-item-avatar>
-                <v-list-item-title v-if="on">
-                  <h3>{{ $auth.user.firstName }}</h3>
-                </v-list-item-title>
-              </v-list-item>
-            </template>
-            <v-list rounded color="background">
-              <v-list-item
-                to="/profil"
-                nuxt
-              >
-                <v-list-item-title>Mon compte</v-list-item-title>
-              </v-list-item>
-              <v-list-item
-                @click="$auth.logout()"
-              >
-                <v-list-item-title>Deconnexion</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <v-list color="background" dense rounded class="mr-8">
+            <v-menu open-on-hover bottom offset-y>
+              <template #activator="{ on, attrs }">
+                <v-list-item
+                  v-if="$auth.user"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-list-item-avatar style="border: solid var(--v-primary-base) 2px">
+                    <v-img :src="$auth.user.avatar" />
+                  </v-list-item-avatar>
+                  <v-list-item-title v-if="on">
+                    <h3>{{ $auth.user.firstName }}</h3>
+                  </v-list-item-title>
+                </v-list-item>
+              </template>
+              <v-list rounded color="background">
+                <v-list-item
+                  to="/profil"
+                  nuxt
+                >
+                  <v-list-item-title>Mon compte</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  @click="$auth.logout()"
+                >
+                  <v-list-item-title>Deconnexion</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-list>
         </v-list>
       </v-app-bar>
     </v-app>
@@ -122,7 +139,12 @@
 </template>
 
 <script>
+import notification from '../components/notification'
+
 export default {
+  components: {
+    notification
+  },
   data () {
     return {
       drawer: true,
@@ -131,7 +153,7 @@ export default {
       items: [
         {
           icon: 'mdi-home-outline',
-          title: 'Order',
+          title: 'Acceuil',
           to: '/'
         },
         {
@@ -154,11 +176,21 @@ export default {
     }
   },
   computed: {
+    notification: {
+      get () {
+        return this.$store.getters['notification/notifications']
+      }
+    },
+
     logo () {
       return this.$vuetify.theme.dark ? process.env.api_url + '/images/logoDark.svg' : process.env.api_url + '/images/logoLight.svg'
     }
   },
   mounted () {
+    if (this.$auth.loggedIn) {
+      this.$store.dispatch('notification/fetch', { token: this.$auth.getToken('local'), user: this.$auth.user.id })
+    }
+
     this.socket = this.$nuxtSocket({
       name: 'main'
     })

@@ -9,7 +9,6 @@
           flat
           class="mt-4"
           color="background"
-          max-height="500"
         >
           <v-card-title>
             Toutes les commandes

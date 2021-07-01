@@ -39,7 +39,7 @@
 import deliveriesTable from '../components/deliveriesTable.vue'
 
 export default {
-  name: 'Deliveries',
+  name: 'Livraisons',
   components: {
     deliveriesTable
   },

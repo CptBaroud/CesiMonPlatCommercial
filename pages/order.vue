@@ -39,7 +39,7 @@
 import orderTable from '../components/orderTable.vue'
 
 export default {
-  name: 'Deliveries',
+  name: 'Commandes',
   components: {
     orderTable
   },
