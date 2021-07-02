@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     deliveriesDone () {
-      return this.$store.getters['delivery/deliveries'].filter(object => object.status === true)
+      return this.$store.getters['delivery/deliveries'].filter(object => object.status === 6)
     },
     deliveriesNotDone () {
       return this.$store.getters['delivery/deliveries'].filter(object => object.done === false)

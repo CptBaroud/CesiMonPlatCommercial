@@ -37,7 +37,7 @@
         </template>
         <template #[`item.status`]="{item}">
           <v-chip
-            :color="statusColor(item)"
+            :color="statusColor(item.status)"
           >
             {{ statusText(item.status) }}
           </v-chip>
